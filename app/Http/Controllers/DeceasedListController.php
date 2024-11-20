@@ -35,6 +35,7 @@ class DeceasedListController extends Controller
         $validated = $request->validate([
             "deceased_name" => 'required|string|max:255',
             "deceased_date_of_birth"  => 'required|string|max:255',
+            "deceased_date_of_death"  => 'required|string|max:255',
             "deceased_gender"  => 'required|string|max:255',
             "type_of_lot"  => 'required|string|max:255',
             "block_no"  => 'required|string|max:255',

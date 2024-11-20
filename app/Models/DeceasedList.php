@@ -9,6 +9,7 @@ class DeceasedList extends Model
     protected $fillable = [
         "deceased_name",
         "deceased_date_of_birth",
+        "deceased_date_of_death",
         "deceased_gender",
         "type_of_lot",
         "block_no",

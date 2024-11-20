@@ -5,6 +5,7 @@ export default function Create() {
     const { data, setData, post, processing, reset, errors } = useForm({
         deceased_name: "",
         deceased_date_of_birth: "",
+        deceased_date_of_death: "",
         deceased_gender: "",
         type_of_lot: "",
         block_no: "",
@@ -93,6 +94,30 @@ export default function Create() {
                                         value={data.deceased_date_of_birth}
                                         id="deceased_date_of_birth"
                                         name="deceased_date_of_birth"
+                                        type="date"
+                                        className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm/6"
+                                    />
+                                </div>
+                            </div>
+
+                            <div className="sm:col-span-2">
+                                <label
+                                    htmlFor="deceased_date_of_death"
+                                    className="block text-sm/6 font-medium text-gray-900"
+                                >
+                                    Deceased Date of Death
+                                </label>
+                                <div className="mt-2">
+                                    <input
+                                        onChange={(e) =>
+                                            setData(
+                                                "deceased_date_of_death",
+                                                e.target.value
+                                            )
+                                        }
+                                        value={data.deceased_date_of_death}
+                                        id="deceased_date_of_death"
+                                        name="deceased_date_of_death"
                                         type="date"
                                         className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm/6"
                                     />

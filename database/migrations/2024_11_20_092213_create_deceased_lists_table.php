@@ -16,6 +16,7 @@ return new class extends Migration
             /* personal information */
             $table->string("deceased_name");
             $table->string("deceased_date_of_birth");
+            $table->string("deceased_date_of_death");
             $table->string("deceased_gender");
             /* location */
             $table->string("type_of_lot");

@@ -80,7 +80,9 @@ export default function Index({ deceasedList }) {
                                                         }
                                                     </td>
                                                     <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                                                        add date of death
+                                                        {
+                                                            deceased.deceased_date_of_death
+                                                        }
                                                     </td>
                                                     <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
                                                         {
