@@ -89,12 +89,39 @@ export default function Index({ deceasedList }) {
                                                             deceased.deceased_gender
                                                         }
                                                     </td>
-                                                    <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
-                                                        <a
-                                                            href="#"
+                                                    <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6 space-x-4">
+                                                        <Link
+                                                            href={route(
+                                                                "lists-of-deceased.show",
+                                                                deceased
+                                                            )}
                                                             className="text-indigo-600 hover:text-indigo-900"
                                                         >
+                                                            Show more
+                                                            <span className="sr-only">
+                                                                ,{" "}
+                                                                {
+                                                                    deceased.deceased_name
+                                                                }
+                                                            </span>
+                                                        </Link>
+                                                        <a
+                                                            href="#"
+                                                            className="text-green-600 hover:text-green-900"
+                                                        >
                                                             Edit
+                                                            <span className="sr-only">
+                                                                ,{" "}
+                                                                {
+                                                                    deceased.deceased_name
+                                                                }
+                                                            </span>
+                                                        </a>
+                                                        <a
+                                                            href="#"
+                                                            className="text-red-600 hover:text-red-900"
+                                                        >
+                                                            Delete
                                                             <span className="sr-only">
                                                                 ,{" "}
                                                                 {

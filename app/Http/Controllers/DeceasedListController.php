@@ -55,9 +55,11 @@ class DeceasedListController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(DeceasedList $deceasedList)
+    public function show(DeceasedList $listsOfDeceased)
     {
-        //
+        return Inertia::render("DeceasedLists/Show", [
+            "deceased" => $listsOfDeceased
+        ]);
     }
 
     /**
