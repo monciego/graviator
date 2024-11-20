@@ -120,8 +120,12 @@ export default function Index({ deceasedList }) {
                                                                 }
                                                             </span>
                                                         </Link>
-                                                        <a
-                                                            href="#"
+                                                        <Link
+                                                            href={route(
+                                                                "lists-of-deceased.destroy",
+                                                                deceased.id
+                                                            )}
+                                                            method="delete"
                                                             className="text-red-600 hover:text-red-900"
                                                         >
                                                             Delete
@@ -131,7 +135,7 @@ export default function Index({ deceasedList }) {
                                                                     deceased.deceased_name
                                                                 }
                                                             </span>
-                                                        </a>
+                                                        </Link>
                                                     </td>
                                                 </tr>
                                             ))}

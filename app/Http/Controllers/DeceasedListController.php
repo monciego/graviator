@@ -99,8 +99,8 @@ class DeceasedListController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(DeceasedList $deceasedList)
+    public function destroy(DeceasedList $listsOfDeceased)
     {
-        //
+        $listsOfDeceased->delete();
     }
 }
