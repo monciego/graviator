@@ -1,16 +1,7 @@
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
-import { Head } from "@inertiajs/react";
+import { Head, Link } from "@inertiajs/react";
 
-export default function Index() {
-    const people = [
-        {
-            name: "Lindsay Walton",
-            title: "Front-end Developer",
-            email: "lindsay.walton@example.com",
-            role: "Member",
-        },
-        // More people...
-    ];
+export default function Index({ deceasedList }) {
     return (
         <AuthenticatedLayout>
             <Head title="List of Deceased" />
@@ -27,12 +18,13 @@ export default function Index() {
                             </p>
                         </div>
                         <div className="mt-4 sm:mt-0 sm:ml-16 sm:flex-none">
-                            <button
+                            <Link
+                                href={route("lists-of-deceased.create")}
                                 type="button"
                                 className="inline-flex items-center justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:w-auto"
                             >
-                                Add user
-                            </button>
+                                Create New
+                            </Link>
                         </div>
                     </div>
                     <div className="mt-8 flex flex-col">
@@ -46,25 +38,25 @@ export default function Index() {
                                                     scope="col"
                                                     className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6"
                                                 >
-                                                    Name
+                                                    Deceased Name
                                                 </th>
                                                 <th
                                                     scope="col"
                                                     className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
                                                 >
-                                                    Title
+                                                    Date of Birth
                                                 </th>
                                                 <th
                                                     scope="col"
                                                     className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
                                                 >
-                                                    Email
+                                                    Date of Death
                                                 </th>
                                                 <th
                                                     scope="col"
                                                     className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
                                                 >
-                                                    Role
+                                                    Gender
                                                 </th>
                                                 <th
                                                     scope="col"
@@ -77,19 +69,23 @@ export default function Index() {
                                             </tr>
                                         </thead>
                                         <tbody className="divide-y divide-gray-200 bg-white">
-                                            {people.map((person) => (
-                                                <tr key={person.email}>
+                                            {deceasedList.map((deceased) => (
+                                                <tr key={deceased.id}>
                                                     <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">
-                                                        {person.name}
+                                                        {deceased.deceased_name}
                                                     </td>
                                                     <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                                                        {person.title}
+                                                        {
+                                                            deceased.deceased_date_of_birth
+                                                        }
                                                     </td>
                                                     <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                                                        {person.email}
+                                                        add date of death
                                                     </td>
                                                     <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                                                        {person.role}
+                                                        {
+                                                            deceased.deceased_gender
+                                                        }
                                                     </td>
                                                     <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
                                                         <a
@@ -98,7 +94,10 @@ export default function Index() {
                                                         >
                                                             Edit
                                                             <span className="sr-only">
-                                                                , {person.name}
+                                                                ,{" "}
+                                                                {
+                                                                    deceased.deceased_name
+                                                                }
                                                             </span>
                                                         </a>
                                                     </td>

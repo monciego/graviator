@@ -34,7 +34,7 @@ export default function AuthenticatedLayout({ header, children }) {
                                 <NavLink
                                     href={route("lists-of-deceased.index")}
                                     active={route().current(
-                                        "lists-of-deceased.index"
+                                        "lists-of-deceased.*"
                                     )}
                                 >
                                     List of Deceased

@@ -13,7 +13,10 @@ class DeceasedListController extends Controller
      */
     public function index()
     {
-        return Inertia::render("DeceasedLists/Index");
+        $deceasedList = DeceasedList::all();
+        return Inertia::render("DeceasedLists/Index", [
+            "deceasedList" => $deceasedList
+        ]);
     }
 
     /**
@@ -21,7 +24,7 @@ class DeceasedListController extends Controller
      */
     public function create()
     {
-        //
+        return Inertia::render("DeceasedLists/Create");
     }
 
     /**
@@ -29,7 +32,23 @@ class DeceasedListController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validated = $request->validate([
+            "deceased_name" => 'required|string|max:255',
+            "deceased_date_of_birth"  => 'required|string|max:255',
+            "deceased_gender"  => 'required|string|max:255',
+            "type_of_lot"  => 'required|string|max:255',
+            "block_no"  => 'required|string|max:255',
+            "lot_no"  => 'required|string|max:255',
+            "owner_name"  => 'required|string|max:255',
+            "relationship_to_deceased"  => 'required|string|max:255',
+            "contact_no"  => 'required|string|max:255',
+            "email_address"  => 'required|string|max:255|email',
+        ]);
+
+
+        DeceasedList::create($validated);
+
+        return redirect(route('lists-of-deceased.index'));
     }
 
     /**
