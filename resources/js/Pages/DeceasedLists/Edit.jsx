@@ -1,28 +1,30 @@
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import { useForm, Head, Link } from "@inertiajs/react";
 
-export default function Create() {
-    const { data, setData, post, processing, reset, errors } = useForm({
-        deceased_name: "",
-        deceased_date_of_birth: "",
-        deceased_date_of_death: "",
-        deceased_gender: "",
-        type_of_lot: "",
-        block_no: "",
-        lot_no: "",
-        owner_name: "",
-        relationship_to_deceased: "",
-        contact_no: "",
-        email_address: "",
+export default function Edit({ deceased }) {
+    const { data, setData, patch, processing, reset, errors } = useForm({
+        deceased_name: deceased.deceased_name,
+        deceased_date_of_birth: deceased.deceased_date_of_birth,
+        deceased_date_of_death: deceased.deceased_date_of_death,
+        deceased_gender: deceased.deceased_gender,
+        type_of_lot: deceased.type_of_lot,
+        block_no: deceased.block_no,
+        lot_no: deceased.lot_no,
+        owner_name: deceased.owner_name,
+        relationship_to_deceased: deceased.relationship_to_deceased,
+        contact_no: deceased.contact_no,
+        email_address: deceased.email_address,
     });
 
     const submit = (e) => {
         e.preventDefault();
-        post(route("lists-of-deceased.store"), { onSuccess: () => reset() });
+        patch(route("lists-of-deceased.update", deceased.id), {
+            onSuccess: () => reset(),
+        });
     };
     return (
         <AuthenticatedLayout>
-            <Head title="Create List of Deceased" />
+            <Head title="Edit List of Deceased" />
 
             <div className="py-12">
                 <form onSubmit={submit}>
@@ -30,7 +32,7 @@ export default function Create() {
                         <div className="sm:flex sm:items-center">
                             <div className="sm:flex-auto">
                                 <h1 className="text-xl font-semibold text-gray-900">
-                                    Create new
+                                    Edit Information
                                 </h1>
                             </div>
                         </div>

@@ -105,8 +105,11 @@ export default function Index({ deceasedList }) {
                                                                 }
                                                             </span>
                                                         </Link>
-                                                        <a
-                                                            href="#"
+                                                        <Link
+                                                            href={route(
+                                                                "lists-of-deceased.edit",
+                                                                deceased.id
+                                                            )}
                                                             className="text-green-600 hover:text-green-900"
                                                         >
                                                             Edit
@@ -116,7 +119,7 @@ export default function Index({ deceasedList }) {
                                                                     deceased.deceased_name
                                                                 }
                                                             </span>
-                                                        </a>
+                                                        </Link>
                                                         <a
                                                             href="#"
                                                             className="text-red-600 hover:text-red-900"
