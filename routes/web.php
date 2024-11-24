@@ -2,9 +2,18 @@
 
 use App\Http\Controllers\DeceasedListController;
 use App\Http\Controllers\ProfileController;
+use App\Models\DeceasedList;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
+
+Route::get('/map', function () {
+    $deceasedList = DeceasedList::all();
+    return Inertia::render('Map/Index', [
+        'apiKey' => env('GOOGLE_MAP_API_KEY'),
+        "deceasedList" => $deceasedList
+    ]);
+})->middleware("guest")->name("map");
 
 Route::get('/', function () {
     return Inertia::render('Welcome', [

@@ -13,6 +13,9 @@ return new class extends Migration
     {
         Schema::create('deceased_lists', function (Blueprint $table) {
             $table->id();
+            $table->decimal('latitude', 10, 8);
+            $table->decimal('longitude', 11, 8);
+            $table->string('status'); // available, sold, or occupied
             /* personal information */
             $table->string("deceased_name");
             $table->string("deceased_date_of_birth");

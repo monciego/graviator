@@ -7,6 +7,10 @@ use Illuminate\Database\Eloquent\Model;
 class DeceasedList extends Model
 {
     protected $fillable = [
+        "latitude",
+        "longitude",
+        "status",
+        "deceased_name",
         "deceased_name",
         "deceased_date_of_birth",
         "deceased_date_of_death",
