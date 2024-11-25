@@ -1,17 +1,34 @@
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import { useForm, Head, Link } from "@inertiajs/react";
+import { useState } from "react";
 
-export default function Create() {
+export default function Create({ blocks }) {
+    const [selectedBlockNo, setSelectedBlockNo] = useState(""); // Track selected block
+
+    console.log("Selected Block No:", selectedBlockNo); // Debugging
+    console.log("Blocks Data:", blocks); // Debugging
+
+    // Get the lots of the selected block
+    const availableLots =
+        blocks
+            .find((block) => {
+                // Compare the block_no correctly
+                console.log("Checking Block:", block.block_no);
+                return block.block_no.toString() === selectedBlockNo.toString(); // Ensure correct type comparison
+            })
+            ?.lots?.filter((lot) => lot.status === "available") || [];
+
+    console.log("Available Lots:", availableLots); // Debugging
     const { data, setData, post, processing, reset, errors } = useForm({
         deceased_name: "",
-        deceased_date_of_birth: "",
-        deceased_date_of_death: "",
-        deceased_gender: "",
+        date_of_birth: "",
+        date_of_death: "",
+        gender: "",
         type_of_lot: "",
         block_no: "",
         lot_no: "",
-        owner_name: "",
-        relationship_to_deceased: "",
+        lot_owner: "",
+        lot_owner_relationship_to_deceased: "",
         contact_no: "",
         email_address: "",
     });
@@ -34,7 +51,138 @@ export default function Create() {
                                 </h1>
                             </div>
                         </div>
+
                         <div className="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
+                            <div className="col-span-full">
+                                <h2 className="font-medium">Location</h2>
+                            </div>
+
+                            <div className="sm:col-span-2">
+                                <label
+                                    htmlFor="block_no"
+                                    className="block text-sm/6 font-medium text-gray-900"
+                                >
+                                    Available Block
+                                </label>
+                                <div className="mt-2">
+                                    <select
+                                        onChange={(e) => {
+                                            const blockNo = e.target.value;
+
+                                            // Update both the block_no and reset lot_no when block_no changes
+                                            setData((prevData) => {
+                                                // Only reset lot_no if the block_no has changed
+                                                const updatedData = {
+                                                    ...prevData,
+                                                    block_no: blockNo,
+                                                };
+
+                                                // If block_no changes, reset lot_no to empty string
+                                                if (
+                                                    prevData.block_no !==
+                                                    blockNo
+                                                ) {
+                                                    updatedData.lot_no = "";
+                                                }
+
+                                                return updatedData;
+                                            });
+
+                                            setSelectedBlockNo(blockNo); // Update selected block for UI
+                                        }}
+                                        id="block_no"
+                                        value={selectedBlockNo}
+                                        name="block_no"
+                                        className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm/6"
+                                    >
+                                        <option value="" disabled>
+                                            Select Block
+                                        </option>
+                                        {blocks.map((block) => {
+                                            return (
+                                                <option
+                                                    key={block.id}
+                                                    value={block.block_no}
+                                                >
+                                                    {block.block_no}
+                                                </option>
+                                            );
+                                        })}
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div className="sm:col-span-2">
+                                <label
+                                    htmlFor="lot_no"
+                                    className="block text-sm/6 font-medium text-gray-900"
+                                >
+                                    Lot Number
+                                </label>
+                                <div className="mt-2">
+                                    {selectedBlockNo && (
+                                        <select
+                                            onChange={(e) =>
+                                                setData(
+                                                    "lot_no",
+                                                    e.target.value
+                                                )
+                                            } // Use setData for form submission
+                                            id="lot_no"
+                                            value={data.lot_no}
+                                            name="lot_no"
+                                            className="block w-full  rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm/6"
+                                        >
+                                            <option value="" disabled>
+                                                Select Lot
+                                            </option>
+                                            {availableLots.map((lot) => (
+                                                <option
+                                                    key={lot.id}
+                                                    value={lot.no}
+                                                >
+                                                    {lot.lot_no}{" "}
+                                                    {/* Replace with desired lot property */}
+                                                </option>
+                                            ))}
+                                        </select>
+                                    )}
+                                </div>
+                            </div>
+
+                            <div className="sm:col-span-2">
+                                <label
+                                    htmlFor="type_of_lot"
+                                    className="block text-sm/6 font-medium text-gray-900"
+                                >
+                                    Type of Lot
+                                </label>
+                                <div className="mt-2">
+                                    <select
+                                        onChange={(e) =>
+                                            setData(
+                                                "type_of_lot",
+                                                e.target.value
+                                            )
+                                        }
+                                        id="type_of_lot"
+                                        value={data.type_of_lot}
+                                        name="type_of_lot"
+                                        className="block w-full  rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm/6"
+                                    >
+                                        <option value="" disabled>
+                                            Select Type
+                                        </option>
+                                        <option value="single">Single</option>
+                                        <option value="double">Double</option>
+
+                                        <option value="family">Family</option>
+
+                                        <option value="lawn">Lawn</option>
+                                    </select>
+                                </div>
+                            </div>
+
                             <div className="col-span-full">
                                 <h2 className="font-medium">
                                     Personal Information
@@ -58,7 +206,6 @@ export default function Create() {
                                         }
                                         id="deceased_name"
                                         value={data.deceased_name}
-                                        name="city"
                                         type="text"
                                         className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm/6"
                                     />
@@ -67,7 +214,7 @@ export default function Create() {
 
                             <div className="sm:col-span-2">
                                 <label
-                                    htmlFor="deceased_date_of_birth"
+                                    htmlFor="date_of_birth"
                                     className="block text-sm/6 font-medium text-gray-900"
                                 >
                                     Deceased Date of Birth
@@ -76,14 +223,13 @@ export default function Create() {
                                     <input
                                         onChange={(e) =>
                                             setData(
-                                                "deceased_date_of_birth",
+                                                "date_of_birth",
                                                 e.target.value
                                             )
                                         }
-                                        value={data.deceased_date_of_birth}
-                                        id="deceased_date_of_birth"
-                                        name="deceased_date_of_birth"
-                                        type="date"
+                                        id="date_of_birth"
+                                        value={data.date_of_birth}
+                                        type="text"
                                         className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm/6"
                                     />
                                 </div>
@@ -91,7 +237,7 @@ export default function Create() {
 
                             <div className="sm:col-span-2">
                                 <label
-                                    htmlFor="deceased_date_of_death"
+                                    htmlFor="date_of_death"
                                     className="block text-sm/6 font-medium text-gray-900"
                                 >
                                     Deceased Date of Death
@@ -100,14 +246,13 @@ export default function Create() {
                                     <input
                                         onChange={(e) =>
                                             setData(
-                                                "deceased_date_of_death",
+                                                "date_of_death",
                                                 e.target.value
                                             )
                                         }
-                                        value={data.deceased_date_of_death}
-                                        id="deceased_date_of_death"
-                                        name="deceased_date_of_death"
-                                        type="date"
+                                        id="date_of_death"
+                                        value={data.date_of_death}
+                                        type="text"
                                         className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm/6"
                                     />
                                 </div>
@@ -115,7 +260,7 @@ export default function Create() {
 
                             <div className="sm:col-span-2">
                                 <label
-                                    htmlFor="deceased_gender"
+                                    htmlFor="gender"
                                     className="block text-sm/6 font-medium text-gray-900"
                                 >
                                     Deceased Gender
@@ -123,80 +268,10 @@ export default function Create() {
                                 <div className="mt-2">
                                     <input
                                         onChange={(e) =>
-                                            setData(
-                                                "deceased_gender",
-                                                e.target.value
-                                            )
+                                            setData("gender", e.target.value)
                                         }
-                                        value={data.deceased_gender}
-                                        id="deceased_gender"
-                                        type="text"
-                                        className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm/6"
-                                    />
-                                </div>
-                            </div>
-
-                            <div className="col-span-full">
-                                <h2 className="font-medium">Location</h2>
-                            </div>
-
-                            <div className="sm:col-span-2">
-                                <label
-                                    htmlFor="type_of_lot"
-                                    className="block text-sm/6 font-medium text-gray-900"
-                                >
-                                    Type of Lot
-                                </label>
-                                <div className="mt-2">
-                                    <input
-                                        onChange={(e) =>
-                                            setData(
-                                                "type_of_lot",
-                                                e.target.value
-                                            )
-                                        }
-                                        value={data.type_of_lot}
-                                        id="type_of_lot"
-                                        type="text"
-                                        className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm/6"
-                                    />
-                                </div>
-                            </div>
-
-                            <div className="sm:col-span-2">
-                                <label
-                                    htmlFor="block_no"
-                                    className="block text-sm/6 font-medium text-gray-900"
-                                >
-                                    Block Number
-                                </label>
-                                <div className="mt-2">
-                                    <input
-                                        onChange={(e) =>
-                                            setData("block_no", e.target.value)
-                                        }
-                                        value={data.block_no}
-                                        id="block_no"
-                                        type="text"
-                                        className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm/6"
-                                    />
-                                </div>
-                            </div>
-
-                            <div className="sm:col-span-2">
-                                <label
-                                    htmlFor="lot_no"
-                                    className="block text-sm/6 font-medium text-gray-900"
-                                >
-                                    Lot Number
-                                </label>
-                                <div className="mt-2">
-                                    <input
-                                        onChange={(e) =>
-                                            setData("lot_no", e.target.value)
-                                        }
-                                        value={data.lot_no}
-                                        id="lot_no"
+                                        id="gender"
+                                        value={data.gender}
                                         type="text"
                                         className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm/6"
                                     />
@@ -209,21 +284,18 @@ export default function Create() {
 
                             <div className="sm:col-span-2">
                                 <label
-                                    htmlFor="owner_name"
+                                    htmlFor="lot_owner"
                                     className="block text-sm/6 font-medium text-gray-900"
                                 >
-                                    Owner Name
+                                    Lot Owner Name
                                 </label>
                                 <div className="mt-2">
                                     <input
                                         onChange={(e) =>
-                                            setData(
-                                                "owner_name",
-                                                e.target.value
-                                            )
+                                            setData("lot_owner", e.target.value)
                                         }
-                                        value={data.owner_name}
-                                        id="owner_name"
+                                        value={data.lot_owner}
+                                        id="lot_owner"
                                         type="text"
                                         className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm/6"
                                     />
@@ -232,7 +304,7 @@ export default function Create() {
 
                             <div className="sm:col-span-2">
                                 <label
-                                    htmlFor="relationship_to_deceased"
+                                    htmlFor="lot_owner_relationship_to_deceased"
                                     className="block text-sm/6 font-medium text-gray-900"
                                 >
                                     Relationship to the Deceased
@@ -241,12 +313,14 @@ export default function Create() {
                                     <input
                                         onChange={(e) =>
                                             setData(
-                                                "relationship_to_deceased",
+                                                "lot_owner_relationship_to_deceased",
                                                 e.target.value
                                             )
                                         }
-                                        value={data.relationship_to_deceased}
-                                        id="relationship_to_deceased"
+                                        value={
+                                            data.lot_owner_relationship_to_deceased
+                                        }
+                                        id="lot_owner_relationship_to_deceased"
                                         type="text"
                                         className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm/6"
                                     />

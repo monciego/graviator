@@ -1,5 +1,5 @@
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
-import { Head, Link } from "@inertiajs/react";
+import { Head } from "@inertiajs/react";
 
 export default function Show({ deceased }) {
     return (
@@ -36,7 +36,7 @@ export default function Show({ deceased }) {
                                         Deceased Date of Birth
                                     </dt>
                                     <dd className="mt-1 text-sm/6 text-gray-700 sm:col-span-2 sm:mt-0">
-                                        {deceased.deceased_date_of_birth}
+                                        {deceased.date_of_birth}
                                     </dd>
                                 </div>
                                 <div className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
@@ -44,7 +44,7 @@ export default function Show({ deceased }) {
                                         Deceased Date of Death
                                     </dt>
                                     <dd className="mt-1 text-sm/6 text-gray-700 sm:col-span-2 sm:mt-0">
-                                        {deceased.deceased_date_of_death}
+                                        {deceased.date_of_death}
                                     </dd>
                                 </div>
                                 <div className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
@@ -52,7 +52,7 @@ export default function Show({ deceased }) {
                                         Deceased Gender
                                     </dt>
                                     <dd className="mt-1 text-sm/6 text-gray-700 sm:col-span-2 sm:mt-0">
-                                        {deceased.deceased_gender}
+                                        {deceased.gender}
                                     </dd>
                                 </div>
 
@@ -62,7 +62,7 @@ export default function Show({ deceased }) {
                                         Type of Lot
                                     </dt>
                                     <dd className="mt-1 text-sm/6 text-gray-700 sm:col-span-2 sm:mt-0">
-                                        {deceased.type_of_lot}
+                                        {deceased.lot.type_of_lot}
                                     </dd>
                                 </div>
 
@@ -71,7 +71,7 @@ export default function Show({ deceased }) {
                                         Block number
                                     </dt>
                                     <dd className="mt-1 text-sm/6 text-gray-700 sm:col-span-2 sm:mt-0">
-                                        {deceased.block_no}
+                                        {deceased.lot.block.block_no}
                                     </dd>
                                 </div>
 
@@ -80,7 +80,7 @@ export default function Show({ deceased }) {
                                         Lot number
                                     </dt>
                                     <dd className="mt-1 text-sm/6 text-gray-700 sm:col-span-2 sm:mt-0">
-                                        {deceased.lot_no}
+                                        {deceased.lot.lot_no}
                                     </dd>
                                 </div>
 
@@ -100,7 +100,10 @@ export default function Show({ deceased }) {
                                         Relationship to the deceased
                                     </dt>
                                     <dd className="mt-1 text-sm/6 text-gray-700 sm:col-span-2 sm:mt-0">
-                                        {deceased.relationship_to_deceased}
+                                        {
+                                            deceased.lot
+                                                .lot_owner_relationship_to_deceased
+                                        }
                                     </dd>
                                 </div>
 
@@ -109,7 +112,7 @@ export default function Show({ deceased }) {
                                         Contact number
                                     </dt>
                                     <dd className="mt-1 text-sm/6 text-gray-700 sm:col-span-2 sm:mt-0">
-                                        {deceased.contact_no}
+                                        {deceased.lot.contact_no}
                                     </dd>
                                 </div>
 
@@ -118,7 +121,7 @@ export default function Show({ deceased }) {
                                         Email address
                                     </dt>
                                     <dd className="mt-1 text-sm/6 text-gray-700 sm:col-span-2 sm:mt-0">
-                                        {deceased.email_address}
+                                        {deceased.lot.email_address}
                                     </dd>
                                 </div>
                             </dl>

@@ -2,16 +2,22 @@
 
 use App\Http\Controllers\DeceasedListController;
 use App\Http\Controllers\ProfileController;
+use App\Models\Block;
 use App\Models\DeceasedList;
+use App\Models\Lot;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
+use Illuminate\Support\Facades\DB;
 
 Route::get('/map', function () {
-    $deceasedList = DeceasedList::all();
+    $blocks = Block::with("lots.deceasedInformation")->get();
+    $lots = Lot::with(['block', 'deceasedInformation'])->get();
+
     return Inertia::render('Map/Index', [
         'apiKey' => env('GOOGLE_MAP_API_KEY'),
-        "deceasedList" => $deceasedList
+        "deceasedList" => $lots,
+        "blocks" => $blocks
     ]);
 })->middleware("guest")->name("map");
 

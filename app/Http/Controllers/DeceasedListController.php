@@ -2,7 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Block;
+use App\Models\DeceasedInformation;
 use App\Models\DeceasedList;
+use App\Models\Lot;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
@@ -13,9 +16,9 @@ class DeceasedListController extends Controller
      */
     public function index()
     {
-        $deceasedList = DeceasedList::all();
+        $blocks = Block::with("lots.deceasedInformation")->get();
         return Inertia::render("DeceasedLists/Index", [
-            "deceasedList" => $deceasedList
+            "blocks" => $blocks
         ]);
     }
 
@@ -24,7 +27,10 @@ class DeceasedListController extends Controller
      */
     public function create()
     {
-        return Inertia::render("DeceasedLists/Create");
+        $blocks = Block::with("lots")->get();
+        return Inertia::render("DeceasedLists/Create", [
+            "blocks" => $blocks
+        ]);
     }
 
     /**
@@ -32,6 +38,7 @@ class DeceasedListController extends Controller
      */
     public function store(Request $request)
     {
+        dd($request);
         $validated = $request->validate([
             "deceased_name" => 'required|string|max:255',
             "deceased_date_of_birth"  => 'required|string|max:255',
@@ -55,10 +62,11 @@ class DeceasedListController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(DeceasedList $listsOfDeceased)
+    public function show($id)
     {
+        $deceased = DeceasedInformation::with(['lot.block', 'lot'])->findOrFail($id);
         return Inertia::render("DeceasedLists/Show", [
-            "deceased" => $listsOfDeceased
+            "deceased" => $deceased
         ]);
     }
 

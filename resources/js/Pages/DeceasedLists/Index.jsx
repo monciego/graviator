@@ -1,7 +1,7 @@
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import { Head, Link } from "@inertiajs/react";
 
-export default function Index({ deceasedList }) {
+export default function Index({ blocks }) {
     return (
         <AuthenticatedLayout>
             <Head title="List of Deceased" />
@@ -38,6 +38,18 @@ export default function Index({ deceasedList }) {
                                                     scope="col"
                                                     className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6"
                                                 >
+                                                    Block
+                                                </th>
+                                                <th
+                                                    scope="col"
+                                                    className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
+                                                >
+                                                    Lot
+                                                </th>
+                                                <th
+                                                    scope="col"
+                                                    className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
+                                                >
                                                     Deceased Name
                                                 </th>
                                                 <th
@@ -63,82 +75,103 @@ export default function Index({ deceasedList }) {
                                                     className="relative py-3.5 pl-3 pr-4 sm:pr-6"
                                                 >
                                                     <span className="sr-only">
-                                                        Edit
+                                                        Actions
                                                     </span>
                                                 </th>
                                             </tr>
                                         </thead>
                                         <tbody className="divide-y divide-gray-200 bg-white">
-                                            {deceasedList.map((deceased) => (
-                                                <tr key={deceased.id}>
-                                                    <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">
-                                                        {deceased.deceased_name}
-                                                    </td>
-                                                    <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                                                        {
-                                                            deceased.deceased_date_of_birth
-                                                        }
-                                                    </td>
-                                                    <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                                                        {
-                                                            deceased.deceased_date_of_death
-                                                        }
-                                                    </td>
-                                                    <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                                                        {
-                                                            deceased.deceased_gender
-                                                        }
-                                                    </td>
-                                                    <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6 space-x-4">
-                                                        <Link
-                                                            href={route(
-                                                                "lists-of-deceased.show",
-                                                                deceased
-                                                            )}
-                                                            className="text-indigo-600 hover:text-indigo-900"
-                                                        >
-                                                            Show more
-                                                            <span className="sr-only">
-                                                                ,{" "}
-                                                                {
-                                                                    deceased.deceased_name
+                                            {blocks.map((block) =>
+                                                block.lots.map((lot) =>
+                                                    lot.deceased_information.map(
+                                                        (deceased) => (
+                                                            <tr
+                                                                key={
+                                                                    deceased.id
                                                                 }
-                                                            </span>
-                                                        </Link>
-                                                        <Link
-                                                            href={route(
-                                                                "lists-of-deceased.edit",
-                                                                deceased.id
-                                                            )}
-                                                            className="text-green-600 hover:text-green-900"
-                                                        >
-                                                            Edit
-                                                            <span className="sr-only">
-                                                                ,{" "}
-                                                                {
-                                                                    deceased.deceased_name
-                                                                }
-                                                            </span>
-                                                        </Link>
-                                                        <Link
-                                                            href={route(
-                                                                "lists-of-deceased.destroy",
-                                                                deceased.id
-                                                            )}
-                                                            method="delete"
-                                                            className="text-red-600 hover:text-red-900"
-                                                        >
-                                                            Delete
-                                                            <span className="sr-only">
-                                                                ,{" "}
-                                                                {
-                                                                    deceased.deceased_name
-                                                                }
-                                                            </span>
-                                                        </Link>
-                                                    </td>
-                                                </tr>
-                                            ))}
+                                                            >
+                                                                <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">
+                                                                    {
+                                                                        block.block_no
+                                                                    }
+                                                                </td>
+                                                                <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+                                                                    {lot.lot_no}
+                                                                </td>
+                                                                <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+                                                                    {
+                                                                        deceased.deceased_name
+                                                                    }
+                                                                </td>
+                                                                <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+                                                                    {
+                                                                        deceased.date_of_birth
+                                                                    }
+                                                                </td>
+                                                                <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+                                                                    {
+                                                                        deceased.date_of_death
+                                                                    }
+                                                                </td>
+                                                                <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+                                                                    {
+                                                                        deceased.gender
+                                                                    }
+                                                                </td>
+                                                                <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6 space-x-4">
+                                                                    <Link
+                                                                        href={route(
+                                                                            "lists-of-deceased.show",
+                                                                            deceased
+                                                                        )}
+                                                                        className="text-indigo-600 hover:text-indigo-900"
+                                                                    >
+                                                                        Show
+                                                                        more
+                                                                        <span className="sr-only">
+                                                                            ,{" "}
+                                                                            {
+                                                                                deceased.deceased_name
+                                                                            }
+                                                                        </span>
+                                                                    </Link>
+                                                                    <Link
+                                                                        href={route(
+                                                                            "lists-of-deceased.edit",
+                                                                            deceased.id
+                                                                        )}
+                                                                        className="text-green-600 hover:text-green-900"
+                                                                    >
+                                                                        Edit
+                                                                        <span className="sr-only">
+                                                                            ,{" "}
+                                                                            {
+                                                                                deceased.deceased_name
+                                                                            }
+                                                                        </span>
+                                                                    </Link>
+                                                                    <Link
+                                                                        href={route(
+                                                                            "lists-of-deceased.destroy",
+                                                                            deceased.id
+                                                                        )}
+                                                                        method="delete"
+                                                                        className="text-red-600 hover:text-red-900"
+                                                                    >
+                                                                        Delete
+                                                                        <span className="sr-only">
+                                                                            ,{" "}
+                                                                            {
+                                                                                deceased.deceased_name
+                                                                            }
+                                                                        </span>
+                                                                    </Link>
+                                                                </td>
+                                                            </tr>
+                                                        )
+                                                    )
+                                                )
+                                            )}
                                         </tbody>
                                     </table>
                                 </div>
