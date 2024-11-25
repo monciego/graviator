@@ -44,7 +44,7 @@ export default function Welcome() {
                             </Link>
                             <a
                                 href="#"
-                                class="text-sm/6 font-semibold text-gray-800"
+                                className="text-sm/6 font-semibold text-gray-800"
                             >
                                 Explore Services{" "}
                                 <span aria-hidden="true">→</span>

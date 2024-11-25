@@ -6,9 +6,15 @@ export default function MapPage({ apiKey, deceasedList }) {
     const [isOpen, setIsOpen] = useState(false);
     const [data, setData] = useState(false);
 
+    const [istoggleList, setToggleList] = useState(false);
+
     const openHandler = (data) => {
         setIsOpen((prev) => !prev);
         setData(data);
+    };
+
+    const toggleHandlerList = () => {
+        setToggleList((prev) => !prev);
     };
     return (
         <>
@@ -38,48 +44,168 @@ export default function MapPage({ apiKey, deceasedList }) {
                 </header>
                 <div className="absolute pointer-events-none inset-0 flex items-center justify-center bg-white [mask-image:radial-gradient(ellipse_at_center,transparent_40%,black)]"></div>
 
-                <div className="absolute top-16 right-4 z-50">
-                    <form className="max-w-4xl mx-auto">
-                        <label
-                            htmlFor="default-search"
-                            className="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-white"
-                        >
-                            Search
-                        </label>
-                        <div className="relative">
-                            <div className="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
-                                <svg
-                                    className="w-4 h-4 text-gray-500 dark:text-gray-400"
-                                    aria-hidden="true"
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    fill="none"
-                                    viewBox="0 0 20 20"
-                                >
-                                    <path
-                                        stroke="currentColor"
-                                        strokeLinecap="round"
-                                        strokeLinejoin="round"
-                                        strokeWidth="2"
-                                        d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"
-                                    />
-                                </svg>
+                <button
+                    type="button"
+                    onClick={() => toggleHandlerList()}
+                    className="top-16 left-4 z-10 text-white absolute bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+                >
+                    Search
+                </button>
+
+                {istoggleList && (
+                    <div
+                        onClick={() => toggleHandlerList()}
+                        className="fixed inset-0 bg-black/60 z-[800]"
+                    ></div>
+                )}
+
+                {istoggleList && (
+                    <>
+                        <div className="w-full h-[85vh] bg-slate-950 rounded-tl-xl rounded-tr-xl absolute z-[900] bottom-0 overflow-auto">
+                            <div className="fixed w-full flex px-4 sm:px-6 lg:px-8 py-6 bg-slate-950 z-20">
+                                <div className="sm:flex sm:items-center w-full">
+                                    <div className="sm:flex-auto">
+                                        <h1 className="text-xl font-semibold text-white">
+                                            List of Deceased
+                                        </h1>
+                                    </div>
+                                </div>
+                                <div>
+                                    <button
+                                        onClick={() => toggleHandlerList()}
+                                        className="inline-block text-gray-50 border border-gray-50 focus:ring-2 focus:outline-none focus:ring-red-700 rounded-lg text-sm p-1.5"
+                                        type="button"
+                                    >
+                                        <span className="sr-only">
+                                            Close Profile
+                                        </span>
+                                        <svg
+                                            xmlns="http://www.w3.org/2000/svg"
+                                            fill="none"
+                                            viewBox="0 0 24 24"
+                                            strokeWidth="1.5"
+                                            stroke="currentColor"
+                                            className="w-5 h-5"
+                                        >
+                                            <path
+                                                strokeLinecap="round"
+                                                strokeLinejoin="round"
+                                                d="M6 18 18 6M6 6l12 12"
+                                            />
+                                        </svg>
+                                    </button>
+                                </div>
                             </div>
-                            <input
-                                type="search"
-                                id="default-search"
-                                className="block w-full p-4 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                                placeholder="Search..."
-                                required
-                            />
-                            <button
-                                type="submit"
-                                className="text-white absolute end-2.5 bottom-2.5 bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-                            >
-                                Search
-                            </button>
+
+                            <div className="px-4 sm:px-6 lg:px-8 mt-20">
+                                <div className=" flex flex-col">
+                                    <div className="-my-2 -mx-4 overflow-x-auto sm:-mx-6 lg:-mx-8">
+                                        <div className="inline-block min-w-full py-2 align-middle md:px-6 lg:px-8">
+                                            <div className="overflow-hidden shadow ring-1 ring-black ring-opacity-5 md:rounded-lg">
+                                                <table className="min-w-full divide-y divide-gray-700">
+                                                    <thead className="bg-slate-900">
+                                                        <tr>
+                                                            <th
+                                                                scope="col"
+                                                                className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-white sm:pl-6"
+                                                            >
+                                                                Deceased Name
+                                                            </th>
+                                                            <th
+                                                                scope="col"
+                                                                className="px-3 py-3.5 text-left text-sm font-semibold text-white"
+                                                            >
+                                                                Date of Birth
+                                                            </th>
+                                                            <th
+                                                                scope="col"
+                                                                className="px-3 py-3.5 text-left text-sm font-semibold text-white"
+                                                            >
+                                                                Date of Death
+                                                            </th>
+                                                            <th
+                                                                scope="col"
+                                                                className="px-3 py-3.5 text-left text-sm font-semibold text-white"
+                                                            >
+                                                                Gender
+                                                            </th>
+                                                            <th
+                                                                scope="col"
+                                                                className="relative py-3.5 pl-3 pr-4 sm:pr-6"
+                                                            >
+                                                                <span className="sr-only">
+                                                                    Locate
+                                                                </span>
+                                                            </th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody className="divide-y divide-gray-700 bg-slate-800">
+                                                        {deceasedList.map(
+                                                            (deceased) => (
+                                                                <tr
+                                                                    key={
+                                                                        deceased.id
+                                                                    }
+                                                                >
+                                                                    <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-100 sm:pl-6">
+                                                                        {
+                                                                            deceased.deceased_name
+                                                                        }
+                                                                    </td>
+                                                                    <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-200">
+                                                                        {
+                                                                            deceased.deceased_date_of_birth
+                                                                        }
+                                                                    </td>
+                                                                    <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-200">
+                                                                        {
+                                                                            deceased.deceased_date_of_death
+                                                                        }
+                                                                    </td>
+                                                                    <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-200">
+                                                                        {
+                                                                            deceased.deceased_gender
+                                                                        }
+                                                                    </td>
+                                                                    <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6 space-x-4">
+                                                                        <Link
+                                                                            href=""
+                                                                            className="text-white bg-indigo-600 px-4 py-2 rounded text-sm inline-flex items-center gap-2"
+                                                                        >
+                                                                            <span>
+                                                                                Locate
+                                                                            </span>
+                                                                            <svg
+                                                                                xmlns="http://www.w3.org/2000/svg"
+                                                                                fill="none"
+                                                                                viewBox="0 0 24 24"
+                                                                                strokeWidth={
+                                                                                    1.5
+                                                                                }
+                                                                                stroke="currentColor"
+                                                                                className="size-5"
+                                                                            >
+                                                                                <path
+                                                                                    strokeLinecap="round"
+                                                                                    strokeLinejoin="round"
+                                                                                    d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z"
+                                                                                />
+                                                                            </svg>
+                                                                        </Link>
+                                                                    </td>
+                                                                </tr>
+                                                            )
+                                                        )}
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                    </form>
-                </div>
+                    </>
+                )}
 
                 <APIProvider apiKey={apiKey}>
                     {/*  */}
