@@ -3,10 +3,41 @@ import { useForm, Head, Link } from "@inertiajs/react";
 import { useState } from "react";
 
 export default function Create({ blocks }) {
-    const [selectedBlockNo, setSelectedBlockNo] = useState(""); // Track selected block
+    const [deceasedEntries, setDeceasedEntries] = useState([
+        { deceased_name: "", date_of_birth: "", date_of_death: "", gender: "" },
+    ]);
 
-    console.log("Selected Block No:", selectedBlockNo); // Debugging
-    console.log("Blocks Data:", blocks); // Debugging
+    const { data, setData, post, processing, reset, errors } = useForm({
+        deceased_information: [
+            {
+                deceased_name: "",
+                date_of_birth: "",
+                date_of_death: "",
+                gender: "",
+            },
+        ],
+        type_of_lot: "",
+        block_no: "",
+        lot_no: "",
+        lot_owner: "",
+        lot_owner_relationship_to_deceased: "",
+        contact_no: "",
+        email_address: "",
+    });
+
+    const handleAddEntry = () => {
+        const newEntry = {
+            deceased_name: "",
+            date_of_birth: "",
+            date_of_death: "",
+            gender: "",
+        };
+        const updatedEntries = [...deceasedEntries, newEntry];
+        setDeceasedEntries(updatedEntries);
+        setData("deceased_information", updatedEntries); // Sync with useForm
+    };
+
+    const [selectedBlockNo, setSelectedBlockNo] = useState(""); // Track selected block
 
     // Get the lots of the selected block
     const availableLots =
@@ -18,25 +49,37 @@ export default function Create({ blocks }) {
             })
             ?.lots?.filter((lot) => lot.status === "available") || [];
 
-    console.log("Available Lots:", availableLots); // Debugging
-    const { data, setData, post, processing, reset, errors } = useForm({
-        deceased_name: "",
-        date_of_birth: "",
-        date_of_death: "",
-        gender: "",
-        type_of_lot: "",
-        block_no: "",
-        lot_no: "",
-        lot_owner: "",
-        lot_owner_relationship_to_deceased: "",
-        contact_no: "",
-        email_address: "",
-    });
+    const handleRemoveEntry = (index) => {
+        const updatedEntries = deceasedEntries.filter((_, i) => i !== index);
+        setDeceasedEntries(updatedEntries);
+        setData("deceased_information", updatedEntries); // Sync with useForm
+    };
+
+    const handleInputChange = (index, field, value) => {
+        const updatedEntries = deceasedEntries.map((entry, i) =>
+            i === index ? { ...entry, [field]: value } : entry
+        );
+        setDeceasedEntries(updatedEntries);
+        setData("deceased_information", updatedEntries); // Sync with useForm
+    };
 
     const submit = (e) => {
         e.preventDefault();
-        post(route("lists-of-deceased.store"), { onSuccess: () => reset() });
+        post(route("lists-of-deceased.store"), {
+            onSuccess: () => {
+                reset(); // Reset the form
+                setDeceasedEntries([
+                    {
+                        deceased_name: "",
+                        date_of_birth: "",
+                        date_of_death: "",
+                        gender: "",
+                    },
+                ]); // Reset deceasedEntries
+            },
+        });
     };
+
     return (
         <AuthenticatedLayout>
             <Head title="Create List of Deceased" />
@@ -188,94 +231,138 @@ export default function Create({ blocks }) {
                                     Personal Information
                                 </h2>
                             </div>
+                            <div className="col-span-full">
+                                {deceasedEntries.map((entry, index) => (
+                                    <div
+                                        key={index}
+                                        className="grid grid-cols-1 gap-4 border p-4 rounded-md mb-4 relative"
+                                    >
+                                        <div className="sm:col-span-2">
+                                            <label
+                                                htmlFor={`deceased_name_${index}`}
+                                                className="block text-sm font-medium text-gray-900"
+                                            >
+                                                Deceased Name
+                                            </label>
+                                            <div className="mt-2">
+                                                <input
+                                                    onChange={(e) =>
+                                                        handleInputChange(
+                                                            index,
+                                                            "deceased_name",
+                                                            e.target.value
+                                                        )
+                                                    }
+                                                    id={`deceased_name_${index}`}
+                                                    value={entry.deceased_name}
+                                                    type="text"
+                                                    className="block w-full rounded-md border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                                                />
+                                            </div>
+                                        </div>
 
-                            <div className="sm:col-span-2">
-                                <label
-                                    htmlFor="deceased_name"
-                                    className="block text-sm/6 font-medium text-gray-900"
-                                >
-                                    Deceased Name
-                                </label>
-                                <div className="mt-2">
-                                    <input
-                                        onChange={(e) =>
-                                            setData(
-                                                "deceased_name",
-                                                e.target.value
-                                            )
-                                        }
-                                        id="deceased_name"
-                                        value={data.deceased_name}
-                                        type="text"
-                                        className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm/6"
-                                    />
-                                </div>
-                            </div>
+                                        <div className="sm:col-span-2">
+                                            <label
+                                                htmlFor={`date_of_birth_${index}`}
+                                                className="block text-sm font-medium text-gray-900"
+                                            >
+                                                Deceased Date of Birth
+                                            </label>
+                                            <div className="mt-2">
+                                                <input
+                                                    onChange={(e) =>
+                                                        handleInputChange(
+                                                            index,
+                                                            "date_of_birth",
+                                                            e.target.value
+                                                        )
+                                                    }
+                                                    id={`date_of_birth_${index}`}
+                                                    value={entry.date_of_birth}
+                                                    type="date"
+                                                    className="block w-full rounded-md border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                                                />
+                                            </div>
+                                        </div>
 
-                            <div className="sm:col-span-2">
-                                <label
-                                    htmlFor="date_of_birth"
-                                    className="block text-sm/6 font-medium text-gray-900"
-                                >
-                                    Deceased Date of Birth
-                                </label>
-                                <div className="mt-2">
-                                    <input
-                                        onChange={(e) =>
-                                            setData(
-                                                "date_of_birth",
-                                                e.target.value
-                                            )
-                                        }
-                                        id="date_of_birth"
-                                        value={data.date_of_birth}
-                                        type="text"
-                                        className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm/6"
-                                    />
-                                </div>
-                            </div>
+                                        <div className="sm:col-span-2">
+                                            <label
+                                                htmlFor={`date_of_death_${index}`}
+                                                className="block text-sm font-medium text-gray-900"
+                                            >
+                                                Deceased Date of Death
+                                            </label>
+                                            <div className="mt-2">
+                                                <input
+                                                    onChange={(e) =>
+                                                        handleInputChange(
+                                                            index,
+                                                            "date_of_death",
+                                                            e.target.value
+                                                        )
+                                                    }
+                                                    id={`date_of_death_${index}`}
+                                                    value={entry.date_of_death}
+                                                    type="date"
+                                                    className="block w-full rounded-md border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                                                />
+                                            </div>
+                                        </div>
 
-                            <div className="sm:col-span-2">
-                                <label
-                                    htmlFor="date_of_death"
-                                    className="block text-sm/6 font-medium text-gray-900"
-                                >
-                                    Deceased Date of Death
-                                </label>
-                                <div className="mt-2">
-                                    <input
-                                        onChange={(e) =>
-                                            setData(
-                                                "date_of_death",
-                                                e.target.value
-                                            )
-                                        }
-                                        id="date_of_death"
-                                        value={data.date_of_death}
-                                        type="text"
-                                        className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm/6"
-                                    />
-                                </div>
-                            </div>
+                                        <div className="sm:col-span-2">
+                                            <label
+                                                htmlFor={`gender_${index}`}
+                                                className="block text-sm font-medium text-gray-900"
+                                            >
+                                                Deceased Gender
+                                            </label>
+                                            <div className="mt-2">
+                                                <select
+                                                    onChange={(e) =>
+                                                        handleInputChange(
+                                                            index,
+                                                            "gender",
+                                                            e.target.value
+                                                        )
+                                                    }
+                                                    id={`gender_${index}`}
+                                                    value={entry.gender}
+                                                    className="block w-full rounded-md border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                                                >
+                                                    <option value="">
+                                                        Select Gender
+                                                    </option>
+                                                    <option value="male">
+                                                        Male
+                                                    </option>
+                                                    <option value="female">
+                                                        Female
+                                                    </option>
+                                                </select>
+                                            </div>
+                                        </div>
 
-                            <div className="sm:col-span-2">
-                                <label
-                                    htmlFor="gender"
-                                    className="block text-sm/6 font-medium text-gray-900"
+                                        {deceasedEntries.length > 1 && (
+                                            <button
+                                                type="button"
+                                                onClick={() =>
+                                                    handleRemoveEntry(index)
+                                                }
+                                                className="..."
+                                            >
+                                                Remove
+                                            </button>
+                                        )}
+                                    </div>
+                                ))}
+
+                                <button
+                                    type="button"
+                                    onClick={handleAddEntry}
+                                    className="mt-4 rounded-md bg-indigo-600 px-4 py-2 text-sm font-medium text-white hover:bg-indigo-500"
                                 >
-                                    Deceased Gender
-                                </label>
-                                <div className="mt-2">
-                                    <input
-                                        onChange={(e) =>
-                                            setData("gender", e.target.value)
-                                        }
-                                        id="gender"
-                                        value={data.gender}
-                                        type="text"
-                                        className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm/6"
-                                    />
-                                </div>
+                                    Add Information
+                                </button>
                             </div>
 
                             <div className="col-span-full">

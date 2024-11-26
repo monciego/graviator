@@ -83,7 +83,7 @@ $faker = Faker::create();
             DB::table('lots')->insert([
                 'block_id' => $block_id,
                 'lot_no' => $coordinate['id'],
-                'type_of_lot' => $faker->randomElement(['single', 'double', 'family']),
+                'type_of_lot' => $faker->randomElement(['single', 'double', 'family', 'lawn']),
                 'latitude' => $coordinate['latitude'],
                 'longitude' => $coordinate['longitude'],
                 'status' => $faker->randomElement(['available', 'sold', 'occupied']),
