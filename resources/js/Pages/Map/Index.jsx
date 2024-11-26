@@ -2,7 +2,18 @@ import { Head, Link } from "@inertiajs/react";
 import { AdvancedMarker, APIProvider, Map } from "@vis.gl/react-google-maps";
 import { useState } from "react";
 
-export default function MapPage({ apiKey, deceasedList, blocks }) {
+export default function MapPage({ apiKey, deceasedList }) {
+    const [searchTerm, setSearchTerm] = useState("");
+
+    // Filter lots based on the search query
+    const filteredLots = deceasedList.filter((lot) =>
+        lot.deceased_information.some((deceased) =>
+            deceased.deceased_name
+                .toLowerCase()
+                .includes(searchTerm.toLowerCase())
+        )
+    );
+
     const [isOpen, setIsOpen] = useState(false);
     const [data, setData] = useState(false);
 
@@ -63,10 +74,24 @@ export default function MapPage({ apiKey, deceasedList, blocks }) {
                         <div className="w-full h-[85vh] bg-slate-950 rounded-tl-xl rounded-tr-xl absolute z-[900] bottom-0 overflow-auto">
                             <div className="fixed w-full flex px-4 sm:px-6 lg:px-8 py-6 bg-slate-950 z-20">
                                 <div className="sm:flex sm:items-center w-full">
-                                    <div className="sm:flex-auto">
+                                    <div className="sm:flex gap-4 items-center">
                                         <h1 className="text-xl font-semibold text-white">
                                             List of Deceased
                                         </h1>
+
+                                        <div>
+                                            <input
+                                                type="text"
+                                                placeholder="Search by deceased name..."
+                                                value={searchTerm}
+                                                onChange={(e) =>
+                                                    setSearchTerm(
+                                                        e.target.value
+                                                    )
+                                                }
+                                                className="w-full  border rounded-md focus:outline-none focus:ring focus:ring-indigo-500 placeholder:text-sm"
+                                            />
+                                        </div>
                                     </div>
                                 </div>
                                 <div>
@@ -96,7 +121,7 @@ export default function MapPage({ apiKey, deceasedList, blocks }) {
                                 </div>
                             </div>
 
-                            <div className="px-4 sm:px-6 lg:px-8 mt-20">
+                            <div className="px-4 sm:px-6 lg:px-8 mt-24">
                                 <div className=" flex flex-col">
                                     <div className="-my-2 -mx-4 overflow-x-auto sm:-mx-6 lg:-mx-8">
                                         <div className="inline-block min-w-full py-2 align-middle md:px-6 lg:px-8">
@@ -151,60 +176,65 @@ export default function MapPage({ apiKey, deceasedList, blocks }) {
                                                         </tr>
                                                     </thead>
                                                     <tbody className="divide-y divide-gray-800 bg-slate-950">
-                                                        {blocks.map((block) =>
-                                                            block.lots.map(
-                                                                (lot) =>
-                                                                    lot.deceased_information.map(
-                                                                        (
-                                                                            deceased
-                                                                        ) => (
-                                                                            <tr
-                                                                                key={
-                                                                                    deceased.id
+                                                        {filteredLots.map(
+                                                            (lot) =>
+                                                                lot.deceased_information.map(
+                                                                    (
+                                                                        deceased
+                                                                    ) => (
+                                                                        <tr
+                                                                            key={
+                                                                                deceased.id
+                                                                            }
+                                                                        >
+                                                                            <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-50 sm:pl-6">
+                                                                                {
+                                                                                    lot
+                                                                                        .block
+                                                                                        .block_no
                                                                                 }
-                                                                            >
-                                                                                <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-50 sm:pl-6">
-                                                                                    {
-                                                                                        block.block_no
+                                                                            </td>
+                                                                            <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-200">
+                                                                                {
+                                                                                    lot.lot_no
+                                                                                }
+                                                                            </td>
+                                                                            <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-200">
+                                                                                {
+                                                                                    deceased.deceased_name
+                                                                                }
+                                                                            </td>
+                                                                            <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-200">
+                                                                                {
+                                                                                    deceased.date_of_birth
+                                                                                }
+                                                                            </td>
+                                                                            <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-200">
+                                                                                {
+                                                                                    deceased.date_of_death
+                                                                                }
+                                                                            </td>
+                                                                            <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-200">
+                                                                                {
+                                                                                    deceased.gender
+                                                                                }
+                                                                            </td>
+                                                                            <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6 space-x-4">
+                                                                                <button
+                                                                                    type="button"
+                                                                                    onClick={() =>
+                                                                                        openHandler(
+                                                                                            lot
+                                                                                        )
                                                                                     }
-                                                                                </td>
-                                                                                <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-200">
-                                                                                    {
-                                                                                        lot.lot_no
-                                                                                    }
-                                                                                </td>
-                                                                                <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-200">
-                                                                                    {
-                                                                                        deceased.deceased_name
-                                                                                    }
-                                                                                </td>
-                                                                                <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-200">
-                                                                                    {
-                                                                                        deceased.date_of_birth
-                                                                                    }
-                                                                                </td>
-                                                                                <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-200">
-                                                                                    {
-                                                                                        deceased.date_of_death
-                                                                                    }
-                                                                                </td>
-                                                                                <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-200">
-                                                                                    {
-                                                                                        deceased.gender
-                                                                                    }
-                                                                                </td>
-                                                                                <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6 space-x-4">
-                                                                                    <Link
-                                                                                        href={``}
-                                                                                        className="text-indigo-600 hover:text-indigo-900"
-                                                                                    >
-                                                                                        Locate
-                                                                                    </Link>
-                                                                                </td>
-                                                                            </tr>
-                                                                        )
+                                                                                    className="text-indigo-600 hover:text-indigo-900"
+                                                                                >
+                                                                                    Locate
+                                                                                </button>
+                                                                            </td>
+                                                                        </tr>
                                                                     )
-                                                            )
+                                                                )
                                                         )}
                                                     </tbody>
                                                 </table>
