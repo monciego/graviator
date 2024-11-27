@@ -76,33 +76,88 @@ class DeceasedListController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(DeceasedList $listsOfDeceased)
+    public function edit($id)
     {
+        $blocks = Block::with("lots")->get();
+        $deceased = DeceasedInformation::with(['lot.block', 'lot'])->findOrFail($id);
         return Inertia::render("DeceasedLists/Edit", [
-            "deceased" => $listsOfDeceased
+            "deceased" => $deceased,
+            "blocks" => $blocks
         ]);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, DeceasedList $listsOfDeceased)
+    public function update(Request $request,  $id)
     {
+/* may error */
+/*         $deceased = DeceasedInformation::with(['lot.block', 'lot'])->findOrFail($id); */
         $validated = $request->validate([
-            "deceased_name" => 'required|string|max:255',
-            "deceased_date_of_birth"  => 'required|string|max:255',
-            "deceased_date_of_death"  => 'required|string|max:255',
-            "deceased_gender"  => 'required|string|max:255',
-            "type_of_lot"  => 'required|string|max:255',
-            "block_no"  => 'required|string|max:255',
-            "lot_no"  => 'required|string|max:255',
-            "owner_name"  => 'required|string|max:255',
-            "relationship_to_deceased"  => 'required|string|max:255',
-            "contact_no"  => 'required|string|max:255',
-            "email_address"  => 'required|string|max:255|email',
+            'block_no' => 'required|exists:blocks,block_no',
+            'lot_no' => 'required|exists:lots,lot_no',
+            'lot_owner' => 'nullable|string|max:255',
+            'type_of_lot' => 'nullable|string|max:255',
+            'lot_owner_relationship_to_deceased' => 'nullable|string|max:255',
+            'contact_no' => 'nullable|string|max:15',
+            'email_address' => 'nullable|email|max:255',
+            'deceased_information' => 'required|array',
+            'deceased_information.*.deceased_name' => 'required|string|max:255',
+            'deceased_information.*.date_of_birth' => 'required|date',
+            'deceased_information.*.date_of_death' => 'required|date|after_or_equal:deceased_information.*.date_of_birth',
+            'deceased_information.*.gender' => 'required|in:male,female',
         ]);
 
-        $listsOfDeceased->update($validated);
+ // Find the existing lot and its associated deceased records
+    $lot = Lot::where('lot_no', $validated['lot_no'])->firstOrFail();
+
+    // Retrieve the existing deceased records for the lot
+    $existingDeceased = $lot->deceasedInformation;
+
+    // Process the updated deceased information
+    $updatedDeceasedData = collect($validated['deceased_information']);
+
+    // Track processed IDs or matched records to avoid duplication
+    $processedIds = [];
+
+    foreach ($updatedDeceasedData as $deceasedData) {
+        // Attempt to find a matching record by unique attributes
+        $existingRecord = $existingDeceased
+            ->where('deceased_name', $deceasedData['deceased_name'])
+            ->where('date_of_birth', $deceasedData['date_of_birth'])
+            ->where('date_of_death', $deceasedData['date_of_death'])
+            ->where('gender', $deceasedData['gender'])
+            ->first(); // Ensure we get the model instance
+
+        if ($existingRecord) {
+            // Update the matched record
+            $existingRecord->update([
+                'deceased_name' => $deceasedData['deceased_name'],
+                'date_of_birth' => $deceasedData['date_of_birth'],
+                'date_of_death' => $deceasedData['date_of_death'],
+                'gender' => $deceasedData['gender'],
+            ]);
+
+            $processedIds[] = $existingRecord->id; // Track this ID
+        } else {
+            // Create a new record for unmatched data
+            $newRecord = DeceasedInformation::create([
+                'lot_id' => $lot->id,
+                'deceased_name' => $deceasedData['deceased_name'],
+                'date_of_birth' => $deceasedData['date_of_birth'],
+                'date_of_death' => $deceasedData['date_of_death'],
+                'gender' => $deceasedData['gender'],
+            ]);
+
+            $processedIds[] = $newRecord->id; // Track this ID
+        }
+    }
+
+    // Optional: Remove records not in the updated data
+    $existingDeceased->whereNotIn('id', $processedIds)->each(function ($record) {
+        $record->delete();
+    });
+
 
         return redirect(route('lists-of-deceased.index'));
     }
