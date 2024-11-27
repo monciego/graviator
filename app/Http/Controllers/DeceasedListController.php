@@ -165,8 +165,9 @@ class DeceasedListController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(DeceasedList $listsOfDeceased)
+    public function destroy($id)
     {
-        $listsOfDeceased->delete();
+        $deceased = DeceasedInformation::with(['lot.block', 'lot'])->findOrFail($id);
+        $deceased->delete();
     }
 }
