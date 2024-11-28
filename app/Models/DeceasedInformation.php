@@ -21,4 +21,9 @@ class DeceasedInformation extends Model
     {
         return $this->belongsTo(Lot::class);
     }
+
+   public function interments()
+    {
+        return $this->hasMany(Interment::class);
+    }
 }

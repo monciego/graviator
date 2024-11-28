@@ -1,8 +1,11 @@
 <?php
 
 use App\Http\Controllers\DeceasedListController;
+use App\Http\Controllers\IntermentController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\ServicesController;
 use App\Models\Block;
+use App\Models\DeceasedInformation;
 use App\Models\DeceasedList;
 use App\Models\Lot;
 use Illuminate\Foundation\Application;
@@ -31,9 +34,14 @@ Route::get('/', function () {
 })->middleware("guest");
 
 Route::get('/dashboard', function () {
-    return Inertia::render('Dashboard');
+    $deceasedInformation = DeceasedInformation::all();
+    return Inertia::render('Dashboard', [
+        "deceasedList" => $deceasedInformation
+    ]);
 })->middleware(['auth', 'verified'])->name('dashboard');
 Route::resource('/lists-of-deceased', DeceasedListController::class)->middleware(['auth', 'verified']);
+Route::resource('/interment',IntermentController::class)->middleware(['auth', 'verified']);
+Route::resource('/services', ServicesController::class)->middleware(['auth', 'verified']);
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
