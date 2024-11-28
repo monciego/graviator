@@ -173,7 +173,7 @@ export default function Dashboard({ deceasedList }) {
 
                             <form onSubmit={submit}>
                                 <input
-                                    type="text"
+                                    type="hidden"
                                     name="type"
                                     value={
                                         selectedService && selectedService.name
@@ -184,7 +184,7 @@ export default function Dashboard({ deceasedList }) {
                                 />
 
                                 <input
-                                    type="text"
+                                    type="hidden"
                                     name="category"
                                     value={
                                         selectedService &&
@@ -196,7 +196,7 @@ export default function Dashboard({ deceasedList }) {
                                 />
 
                                 <input
-                                    type="text"
+                                    type="hidden"
                                     name="amount"
                                     value={
                                         selectedService &&

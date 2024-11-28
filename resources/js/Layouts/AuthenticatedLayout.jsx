@@ -44,7 +44,7 @@ export default function AuthenticatedLayout({ header, children }) {
                                     href={route("services.index")}
                                     active={route().current("services.*")}
                                 >
-                                    List of Deceased
+                                    Services
                                 </NavLink>
                             </div>
                         </div>

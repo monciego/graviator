@@ -37,6 +37,7 @@ class ServicesController extends Controller
  // Retrieve booked times for the given date and category
     $bookedTimes = Service::where('date', $validated['date'])
         ->where('category', $validated['category'])
+        ->where('type', $validated['type'])
         ->pluck('time')
         ->toArray(); // Convert collection to array
 
@@ -45,30 +46,32 @@ class ServicesController extends Controller
         dd("The time '{$validated['time']}' is already booked.");
     }
     // Define booking limits per category
-    $bookingLimits = [
-        'Interment' => 1,
-        'Landscaping' => 1,
-        'Burial Transfer' => 1,
-        'Special Lot Maintenance' => 1,
-    ];
+$bookingLimits = [
+    'Interment' => 5,
+    'Landscaping' => 5,
+    'Burial Transfer' => 5,
+    'Special Lot Maintenance' => 5,
+];
 
-    // Check the number of bookings for the same day and category
-    $existingBookingsCount = Service::where('date', $validated['date'])
-        ->where('category', $validated['category'])
-        ->count();
+// Get the booking limit for the category
+$limit = $bookingLimits[$validated['category']] ?? null;
 
-    if (
-        isset($bookingLimits[$validated['category']]) &&
-        $existingBookingsCount >= $bookingLimits[$validated['category']]
-    ) {
-        dd("limited");
-/*         throw ValidationException::withMessages([
-            'category' => "The booking limit for {$validated['category']} has been reached for the selected date.",
-        ]); */
-    }
+// Count existing bookings for the same category and type on the selected date
+$existingBookingsCount = Service::where('date', $validated['date'])
+    ->where('category', $validated['category'])
+    ->where('type', $validated['type'])
+    ->count();
+
+if ($limit && $existingBookingsCount >= $limit) {
+    dd("Booking limit reached.");
+    // Optionally throw an exception
+    // throw ValidationException::withMessages([
+    //     'category' => "The booking limit for {$validated['category']} and type {$validated['type']} has been reached for the selected date.",
+    // ]);
+}
 
     // Create the service record
     Service::create($validated);
-        dd("saved");
+    return redirect(route('dashboard'));
     }
 }

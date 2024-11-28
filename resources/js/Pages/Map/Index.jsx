@@ -393,6 +393,13 @@ export default function MapPage({ apiKey, deceasedList }) {
                                                 </div>
                                             </div>
                                         </>
+                                    ) : data.status === "sold" ? (
+                                        <div className="mt-6 text-white">
+                                            <div className="flex items-center gap-2 text-white">
+                                                <div className="bg-yellow-500 h-6 w-6 rounded-full"></div>
+                                                <span>Sold</span>
+                                            </div>
+                                        </div>
                                     ) : (
                                         <div className="mt-6 text-white">
                                             <div className="flex items-center gap-2 text-white">
