@@ -42,13 +42,6 @@ export default function Welcome() {
                             >
                                 Explore map
                             </Link>
-                            <a
-                                href="#"
-                                className="text-sm/6 font-semibold text-gray-800"
-                            >
-                                Explore Services{" "}
-                                <span aria-hidden="true">→</span>
-                            </a>
                         </div>
                     </div>
                 </div>
