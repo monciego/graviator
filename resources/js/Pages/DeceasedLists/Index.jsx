@@ -1,7 +1,27 @@
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import { Head, Link } from "@inertiajs/react";
+import { useState } from "react";
 
 export default function Index({ blocks }) {
+    const [searchTerm, setSearchTerm] = useState("");
+
+    // Filter blocks and lots based on the search query
+    const filteredBlocks = blocks
+        .map((block) => ({
+            ...block,
+            lots: block.lots
+                .map((lot) => ({
+                    ...lot,
+                    deceased_information: lot.deceased_information.filter(
+                        (deceased) =>
+                            deceased.deceased_name
+                                .toLowerCase()
+                                .includes(searchTerm.toLowerCase())
+                    ),
+                }))
+                .filter((lot) => lot.deceased_information.length > 0), // Remove lots without matching deceased
+        }))
+        .filter((block) => block.lots.length > 0); // Remove blocks without matching lots
     return (
         <AuthenticatedLayout>
             <Head title="List of Deceased" />
@@ -17,7 +37,19 @@ export default function Index({ blocks }) {
                                 A list of all deceased
                             </p>
                         </div>
-                        <div className="mt-4 sm:mt-0 sm:ml-16 sm:flex-none">
+                        <div className="mt-4 sm:mt-0 sm:ml-16 flex items-center gap-4">
+                            <div>
+                                <input
+                                    type="text"
+                                    placeholder="Search by deceased name..."
+                                    value={searchTerm}
+                                    onChange={(e) =>
+                                        setSearchTerm(e.target.value)
+                                    }
+                                    className="w-full  border rounded-md focus:outline-none focus:ring focus:ring-indigo-500 placeholder:text-sm"
+                                />
+                            </div>
+
                             <Link
                                 href={route("lists-of-deceased.create")}
                                 type="button"
@@ -81,7 +113,7 @@ export default function Index({ blocks }) {
                                             </tr>
                                         </thead>
                                         <tbody className="divide-y divide-gray-200 bg-white">
-                                            {blocks.map((block) =>
+                                            {filteredBlocks.map((block) =>
                                                 block.lots.map((lot) =>
                                                     lot.deceased_information.map(
                                                         (deceased) => (

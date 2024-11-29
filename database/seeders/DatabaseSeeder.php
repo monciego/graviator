@@ -67,34 +67,47 @@ $faker = Faker::create();
                 ['id' => 60, 'latitude' => 16.148433613354417, 'longitude' => 119.98436231333112],
         ];
 
-        foreach (range(1, 10) as $block_no) {
-            // Insert block
-            DB::table('blocks')->insert([
-                'block_no' => $block_no,
-                'created_at' => now(),
-                'updated_at' => now(),
-            ]);
-        }
+foreach (range(1, 10) as $block_no) {
+    // Insert block
+    DB::table('blocks')->insert([
+        'block_no' => $block_no,
+        'created_at' => now(),
+        'updated_at' => now(),
+    ]);
+}
 
-        foreach ($coordinates as $coordinate) {
-            // Assign lots to blocks sequentially
-            $block_id = ($coordinate['id'] % 10) + 1;
+foreach ($coordinates as $coordinate) {
+    // Assign lots to blocks sequentially
+    $block_id = ($coordinate['id'] % 10) + 1;
 
-            DB::table('lots')->insert([
-                'block_id' => $block_id,
-                'lot_no' => $coordinate['id'],
-                'type_of_lot' => $faker->randomElement(['single', 'double', 'family', 'lawn']),
-                'latitude' => $coordinate['latitude'],
-                'longitude' => $coordinate['longitude'],
-                'status' => $faker->randomElement(['available', 'sold', 'occupied']),
-                'lot_owner' => $faker->name,
-                'lot_owner_relationship_to_deceased' => $faker->randomElement(['parent', 'child', 'spouse', 'friend']),
-                'contact_no' => $faker->phoneNumber,
-                'email_address' => $faker->safeEmail,
-                'created_at' => now(),
-                'updated_at' => now(),
-            ]);
-        }
+    // Determine the status
+    $status = $faker->randomElement(['available', 'sold', 'occupied']);
+
+    // Base lot data
+    $lotData = [
+        'block_id' => $block_id,
+        'lot_no' => $coordinate['id'],
+        'type_of_lot' => $faker->randomElement(['single', 'double', 'family', 'lawn']),
+        'latitude' => $coordinate['latitude'],
+        'longitude' => $coordinate['longitude'],
+        'status' => $status,
+        'created_at' => now(),
+        'updated_at' => now(),
+    ];
+
+    // Add owner details if status is not 'available'
+    if ($status !== 'available') {
+        $lotData = array_merge($lotData, [
+            'lot_owner' => $faker->name,
+            'lot_owner_relationship_to_deceased' => $faker->randomElement(['parent', 'child', 'spouse', 'friend']),
+            'contact_no' => $faker->phoneNumber,
+            'email_address' => $faker->safeEmail,
+        ]);
+    }
+
+    // Insert the lot
+    DB::table('lots')->insert($lotData);
+}
 
         $this->call([
 /*             BlockSeeder::class,

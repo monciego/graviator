@@ -91,7 +91,7 @@ export default function Show({ deceased }) {
                                         Owner name
                                     </dt>
                                     <dd className="mt-1 text-sm/6 text-gray-700 sm:col-span-2 sm:mt-0">
-                                        {deceased.owner_name}
+                                        {deceased.lot.lot_owner}
                                     </dd>
                                 </div>
 

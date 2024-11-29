@@ -399,15 +399,74 @@ export default function MapPage({ apiKey, deceasedList }) {
                                                 <div className="bg-yellow-500 h-6 w-6 rounded-full"></div>
                                                 <span>Sold</span>
                                             </div>
+
+                                            <div className="mt-4">
+                                                <h2 className="font-medium">
+                                                    Lot Owner:
+                                                </h2>
+                                                <div>
+                                                    <ul className="text-sm">
+                                                        <li>
+                                                            Owner name:{" "}
+                                                            {data.lot_owner}
+                                                        </li>
+                                                        <li>
+                                                            Relationship to the
+                                                            deceased:{" "}
+                                                            {
+                                                                data.lot_owner_relationship
+                                                            }
+                                                        </li>
+                                                        <li>
+                                                            Contact number:{" "}
+                                                            {data.contact_no}
+                                                        </li>
+                                                        <li>
+                                                            Email Address:{" "}
+                                                            {data.email_address}
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                                <Link
+                                                    href={route(
+                                                        "lists-of-deceased.create"
+                                                    )}
+                                                    className="mt-4 bg-indigo-600 px-4 py-2 rounded inline-block"
+                                                >
+                                                    Register Deceased
+                                                </Link>
+                                            </div>
                                         </div>
                                     ) : (
                                         <div className="mt-6 text-white">
                                             <div className="flex items-center gap-2 text-white">
                                                 <div className="bg-green-500 h-6 w-6 rounded-full"></div>
                                                 <span>Available</span>
-                                                {data.deceased_information.map(
-                                                    (x) => x.deceased_name
-                                                )}
+                                            </div>
+
+                                            <div className="mt-4">
+                                                <h2 className="font-medium">
+                                                    Location:
+                                                </h2>
+                                                <div>
+                                                    <ul className="text-sm">
+                                                        <li>
+                                                            Type of Lot:{" "}
+                                                            {data.type_of_lot}
+                                                        </li>
+                                                        <li>
+                                                            Block number:{" "}
+                                                            {
+                                                                data.block
+                                                                    .block_no
+                                                            }
+                                                        </li>
+                                                        <li>
+                                                            Lot number:{" "}
+                                                            {data.lot_no}
+                                                        </li>
+                                                    </ul>
+                                                </div>
                                             </div>
                                         </div>
                                     )}

@@ -56,9 +56,13 @@ class DeceasedListController extends Controller
         ]);
     }
 
-        // Update the lot status to 'occupied'
-        $lot->update(['status' => 'occupied']);
-
+$lot->update([
+    'status' => 'occupied',
+    'lot_owner' => $validated['lot_owner'] ?? null,
+    'lot_owner_relationship_to_deceased' => $validated['lot_owner_relationship_to_deceased'] ?? null,
+    'contact_no' => $validated['contact_no'] ?? null,
+    'email_address' => $validated['email_address'] ?? null,
+]);
         return redirect(route('lists-of-deceased.index'));
     }
 
